@@ -50,7 +50,8 @@ static const std::string Version = "0.6.0";
 /**
    This class interfaces ALE with external code for controlling agents.
  */
-class ALEInterface {
+class ALEInterface
+{
 public:
   ALEInterface();
   ~ALEInterface();
@@ -58,17 +59,17 @@ public:
   ALEInterface(bool display_screen);
 
   // Get the value of a setting.
-  std::string getString(const std::string& key);
-  int getInt(const std::string& key);
-  bool getBool(const std::string& key);
-  float getFloat(const std::string& key);
+  std::string getString(const std::string &key);
+  int getInt(const std::string &key);
+  bool getBool(const std::string &key);
+  float getFloat(const std::string &key);
 
   // Set the value of a setting. loadRom() must be called before the
   // setting will take effect.
-  void setString(const std::string& key, const std::string& value);
-  void setInt(const std::string& key, const int value);
-  void setBool(const std::string& key, const bool value);
-  void setFloat(const std::string& key, const float value);
+  void setString(const std::string &key, const std::string &value);
+  void setInt(const std::string &key, const int value);
+  void setBool(const std::string &key, const bool value);
+  void setFloat(const std::string &key, const float value);
 
   // Resets the Atari and loads a game. After this call the game
   // should be ready to play. This is necessary after changing a
@@ -80,6 +81,11 @@ public:
   // when necessary - this method will keep pressing buttons on the
   // game over screen.
   reward_t act(Action action);
+
+  // Function for applying action to 2 players
+  reward_t act2(Action action_player1, Action action_player2);
+
+  void press_select();
 
   // Indicates if the game has ended.
   bool game_over() const;
@@ -136,12 +142,12 @@ public:
 
   //This method should receive an empty vector to fill it with
   //the grayscale colours
-  void getScreenGrayscale(std::vector<unsigned char>& grayscale_output_buffer);
+  void getScreenGrayscale(std::vector<unsigned char> &grayscale_output_buffer);
 
   //This method should receive a vector to fill it with
   //the RGB colours. The first positions contain the red colours,
   //followed by the green colours and then the blue colours
-  void getScreenRGB(std::vector<unsigned char>& output_rgb_buffer);
+  void getScreenRGB(std::vector<unsigned char> &output_rgb_buffer);
 
   // Returns the current RAM content
   const ALERAM &getRAM();
@@ -159,41 +165,41 @@ public:
   // Reverse operation of cloneState(). This does not restore pseudorandomness, so that repeated
   // calls to restoreState() in the stochastic controls setting will not lead to the same outcomes.
   // By contrast, see restoreSystemState.
-  void restoreState(const ALEState& state);
+  void restoreState(const ALEState &state);
 
   // This makes a copy of the system & environment state, suitable for serialization. This includes
   // pseudorandomness and so is *not* suitable for planning purposes.
   ALEState cloneSystemState();
 
   // Reverse operation of cloneSystemState.
-  void restoreSystemState(const ALEState& state);
+  void restoreSystemState(const ALEState &state);
 
   // Save the current screen as a png file
-  void saveScreenPNG(const std::string& filename);
+  void saveScreenPNG(const std::string &filename);
 
-  // Creates a ScreenExporter object which can be used to save a sequence of frames. Ownership 
+  // Creates a ScreenExporter object which can be used to save a sequence of frames. Ownership
   // said object is passed to the caller. Frames are saved in the directory 'path', which needs
-  // to exists. 
+  // to exists.
   ScreenExporter *createScreenExporter(const std::string &path) const;
 
- public:
+public:
   std::unique_ptr<OSystem> theOSystem;
   std::unique_ptr<Settings> theSettings;
   std::unique_ptr<RomSettings> romSettings;
   std::unique_ptr<StellaEnvironment> environment;
   int max_num_frames; // Maximum number of frames for each episode
 
- public:
+public:
   // Display ALE welcome message
   static std::string welcomeMessage();
   static void disableBufferedIO();
   static void createOSystem(std::unique_ptr<OSystem> &theOSystem,
                             std::unique_ptr<Settings> &theSettings);
-  static void loadSettings(const std::string& romfile,
+  static void loadSettings(const std::string &romfile,
                            std::unique_ptr<OSystem> &theOSystem);
 
- private:
-  static void checkForUnsupportedRom(std::unique_ptr<OSystem>& theOSystem);
+private:
+  static void checkForUnsupportedRom(std::unique_ptr<OSystem> &theOSystem);
 };
 
 #endif

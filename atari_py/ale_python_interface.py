@@ -41,6 +41,10 @@ ale_lib.loadROM.argtypes = [c_void_p, c_char_p]
 ale_lib.loadROM.restype = None
 ale_lib.act.argtypes = [c_void_p, c_int]
 ale_lib.act.restype = c_int
+ale_lib.act2.argtypes = [c_void_p, c_int, c_int]
+ale_lib.act2.restype = c_int
+ale_lib.press_select.argtypes = [c_void_p]
+ale_lib.press_select.restype = None
 ale_lib.game_over.argtypes = [c_void_p]
 ale_lib.game_over.restype = c_bool
 ale_lib.reset_game.argtypes = [c_void_p]
@@ -112,10 +116,12 @@ ale_lib.decodeState.restype = c_void_p
 ale_lib.setLoggerMode.argtypes = [c_int]
 ale_lib.setLoggerMode.restype = None
 
+
 def _as_bytes(s):
     if hasattr(s, 'encode'):
         return s.encode('utf8')
     return s
+
 
 class ALEInterface(object):
     # Logger enum
@@ -129,27 +135,39 @@ class ALEInterface(object):
 
     def getString(self, key):
         return ale_lib.getString(self.obj, _as_bytes(key))
+
     def getInt(self, key):
         return ale_lib.getInt(self.obj, _as_bytes(key))
+
     def getBool(self, key):
         return ale_lib.getBool(self.obj, _as_bytes(key))
+
     def getFloat(self, key):
         return ale_lib.getFloat(self.obj, _as_bytes(key))
 
     def setString(self, key, value):
-      ale_lib.setString(self.obj, _as_bytes(key), _as_bytes(value))
+        ale_lib.setString(self.obj, _as_bytes(key), _as_bytes(value))
+
     def setInt(self, key, value):
-      ale_lib.setInt(self.obj, _as_bytes(key), int(value))
+        ale_lib.setInt(self.obj, _as_bytes(key), int(value))
+
     def setBool(self, key, value):
-      ale_lib.setBool(self.obj, _as_bytes(key), bool(value))
+        ale_lib.setBool(self.obj, _as_bytes(key), bool(value))
+
     def setFloat(self, key, value):
-      ale_lib.setFloat(self.obj, _as_bytes(key), float(value))
+        ale_lib.setFloat(self.obj, _as_bytes(key), float(value))
 
     def loadROM(self, rom_file):
         ale_lib.loadROM(self.obj, _as_bytes(rom_file))
 
     def act(self, action):
         return ale_lib.act(self.obj, int(action))
+
+    def act2(self, action_1, action_2):
+        return ale_lib.act2(self.obj, int(action_1), int(action_2))
+
+    def press_select(self):
+        ale_lib.press_select(self.obj)
 
     def game_over(self):
         return ale_lib.game_over(self.obj)
@@ -244,7 +262,7 @@ class ALEInterface(object):
         if(screen_data is None):
             width = ale_lib.getScreenWidth(self.obj)
             height = ale_lib.getScreenHeight(self.obj)
-            screen_data = np.empty((height, width,3), dtype=np.uint8)
+            screen_data = np.empty((height, width, 3), dtype=np.uint8)
         ale_lib.getScreenRGB(self.obj, as_ctypes(screen_data[:]))
         return screen_data
 
@@ -275,7 +293,7 @@ class ALEInterface(object):
         if(screen_data is None):
             width = ale_lib.getScreenWidth(self.obj)
             height = ale_lib.getScreenHeight(self.obj)
-            screen_data = np.empty((height, width,1), dtype=np.uint8)
+            screen_data = np.empty((height, width, 1), dtype=np.uint8)
         ale_lib.getScreenGrayscale(self.obj, as_ctypes(screen_data[:]))
         return screen_data
 
@@ -357,5 +375,6 @@ class ALEInterface(object):
     def setLoggerMode(mode):
         dic = {'info': 0, 'warning': 1, 'error': 2}
         mode = dic.get(mode, mode)
-        assert mode in [0, 1, 2], "Invalid Mode! Mode must be one of 0: info, 1: warning, 2: error"
+        assert mode in [
+            0, 1, 2], "Invalid Mode! Mode must be one of 0: info, 1: warning, 2: error"
         ale_lib.setLoggerMode(mode)
