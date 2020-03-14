@@ -87,6 +87,8 @@ public:
 
   void press_select();
 
+  void soft_reset();
+
   // Indicates if the game has ended.
   bool game_over() const;
 

@@ -320,6 +320,11 @@ reward_t ALEInterface::act2(Action action_player1, Action action_player2)
   return reward;
 }
 
+void ALEInterface::soft_reset()
+{
+  environment->softReset();
+}
+
 void ALEInterface::press_select()
 {
   environment->pressSelect();

@@ -43,6 +43,8 @@ ale_lib.act.argtypes = [c_void_p, c_int]
 ale_lib.act.restype = c_int
 ale_lib.act2.argtypes = [c_void_p, c_int, c_int]
 ale_lib.act2.restype = c_int
+ale_lib.soft_reset.argtypes = []
+ale_lib.soft_reset.restype = None
 ale_lib.press_select.argtypes = [c_void_p]
 ale_lib.press_select.restype = None
 ale_lib.game_over.argtypes = [c_void_p]
@@ -168,6 +170,9 @@ class ALEInterface(object):
 
     def press_select(self):
         ale_lib.press_select(self.obj)
+
+    def soft_reset(self):
+        ale_lib.soft_reset(self.obj)
 
     def game_over(self):
         return ale_lib.game_over(self.obj)
