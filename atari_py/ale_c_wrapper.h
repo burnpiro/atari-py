@@ -24,6 +24,7 @@ extern "C"
   int act(ALEInterface *ale, int action) { return ale->act((Action)action); }
   int act2(ALEInterface *ale, int action1, int action2) { return ale->act2((Action)action1, (Action)action2); }
   void press_select(ALEInterface *ale) { ale->press_select(); }
+  void soft_reset(ALEInterface *ale) { ale->soft_reset(); }
   bool game_over(ALEInterface *ale) { return ale->game_over(); }
   void reset_game(ALEInterface *ale) { ale->reset_game(); }
   void getAvailableModes(ALEInterface *ale, int *availableModes)
